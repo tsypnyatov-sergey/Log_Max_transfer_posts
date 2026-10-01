@@ -3,4 +3,5 @@
 *.session-journal
 __pycache__/
 downloads/
+.venv/
 .idea/

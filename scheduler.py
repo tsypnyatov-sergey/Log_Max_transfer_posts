@@ -1,8 +1,12 @@
+import os
+
 import schedule
 import time
 import subprocess
 import logging
 from datetime import datetime
+
+import sys
 
 
 logging.basicConfig(
@@ -12,6 +16,9 @@ logging.basicConfig(
     encoding="utf-8"
 )
 
+sys.stdout.reconfigure(
+    encoding="utf-8"
+)
 
 def run_sync():
 
@@ -26,7 +33,12 @@ def run_sync():
             ],
             capture_output=True,
             text=True,
-            encoding="utf-8"
+            encoding="utf-8",
+            errors="replace",
+            env={
+                **os.environ,
+                "PYTHONIOENCODING": "utf-8"
+            }
         )
 
 

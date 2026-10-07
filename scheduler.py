@@ -64,7 +64,7 @@ def run_sync():
 
 schedule.every().day.at("08:00").do(run_sync)
 schedule.every().day.at("12:00").do(run_sync)
-schedule.every().day.at("17:00").do(run_sync)
+schedule.every().day.at("17:06").do(run_sync)
 schedule.every().day.at("20:00").do(run_sync)
 
 

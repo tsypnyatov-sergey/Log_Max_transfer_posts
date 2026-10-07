@@ -579,3 +579,36 @@
 2026-10-07 16:38:22,996 | INFO | Telegram 8 -> MAX OK
 2026-10-07 17:00:12,063 | INFO | Connecting to 149.154.167.51:443/TcpFull...
 2026-10-07 17:00:12,065 | INFO | Connection to 149.154.167.51:443/TcpFull complete!
+2026-10-07 17:06:25,151 | INFO | Connecting to 149.154.167.51:443/TcpFull...
+2026-10-07 17:06:25,153 | INFO | Connection to 149.154.167.51:443/TcpFull complete!
+2026-10-07 17:06:26,203 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:06:56,135 | INFO | Telegram 10 -> MAX OK
+2026-10-07 17:17:43,035 | INFO | Connecting to 149.154.167.51:443/TcpFull...
+2026-10-07 17:17:43,038 | INFO | Connection to 149.154.167.51:443/TcpFull complete!
+2026-10-07 17:17:43,710 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:18:48,421 | INFO | Telegram 15 -> MAX OK
+2026-10-07 17:18:48,424 | INFO | Disconnecting from 149.154.167.51:443/TcpFull...
+2026-10-07 17:18:48,424 | INFO | Disconnection from 149.154.167.51:443/TcpFull complete!
+2026-10-07 17:21:57,117 | INFO | Connecting to 149.154.167.51:443/TcpFull...
+2026-10-07 17:21:57,119 | INFO | Connection to 149.154.167.51:443/TcpFull complete!
+2026-10-07 17:21:57,969 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:22:21,259 | INFO | 20 -> MAX OK
+2026-10-07 17:22:21,261 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:27:54,095 | INFO | Connecting to 149.154.167.51:443/TcpFull...
+2026-10-07 17:27:54,099 | INFO | Connection to 149.154.167.51:443/TcpFull complete!
+2026-10-07 17:33:44,842 | INFO | Connecting to 149.154.167.51:443/TcpFull...
+2026-10-07 17:33:44,845 | INFO | Connection to 149.154.167.51:443/TcpFull complete!
+2026-10-07 17:33:46,124 | ERROR | 30 -> MAX ERROR
+2026-10-07 17:35:01,730 | INFO | Connecting to 149.154.167.51:443/TcpFull...
+2026-10-07 17:35:01,732 | INFO | Connection to 149.154.167.51:443/TcpFull complete!
+2026-10-07 17:35:04,848 | INFO | 30 -> MAX OK
+2026-10-07 17:35:14,848 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:35:16,555 | INFO | 31 -> MAX OK
+2026-10-07 17:35:26,553 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:35:28,339 | INFO | 32 -> MAX OK
+2026-10-07 17:35:38,343 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:35:39,736 | INFO | 33 -> MAX OK
+2026-10-07 17:35:49,744 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:35:51,010 | INFO | 34 -> MAX OK
+2026-10-07 17:36:01,025 | INFO | Starting direct file download in chunks of 131072 at 0, stride 131072
+2026-10-07 17:36:02,297 | INFO | 35 -> MAX OK

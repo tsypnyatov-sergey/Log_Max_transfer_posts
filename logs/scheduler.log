@@ -1,1 +1,48 @@
 2026-10-07 16:44:41,487 | INFO | Планировщик MAX запущен
+2026-10-07 17:00:11,546 | INFO | Запуск синхронизации Telegram -> MAX
+2026-10-07 17:00:13,238 | INFO | None
+2026-10-07 17:00:13,238 | ERROR | Traceback (most recent call last):
+  File "C:\Users\Tsypnyatov.S\PycharmProjects\Log_max_transfer_posts\sync.py", line 374, in <module>
+    asyncio.run(main())
+  File "C:\Users\Tsypnyatov.S\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Tsypnyatov.S\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Tsypnyatov.S\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Tsypnyatov.S\PycharmProjects\Log_max_transfer_posts\sync.py", line 292, in main
+    print(
+  File "C:\Users\Tsypnyatov.S\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u270a' in position 92: character maps to <undefined>
+
+2026-10-07 17:04:54,628 | INFO | Планировщик MAX запущен
+2026-10-07 17:06:24,634 | INFO | Запуск синхронизации Telegram -> MAX
+2026-10-07 17:06:56,202 | INFO | Подключаемся к Telegram...
+Последний обработанный пост: 8
+====================
+Telegram ID: 10
+Синие, жёлтые, красные 
+Базовые машины могут быть разные..
+Но головка, обязательно #LogMax✊
+Скачиваем медиа...
+Файл сохранён:
+downloads\telegram_10_document_2025-10-15_14-09-52.mp4
+downloads\telegram_10_document_2025-10-15_14-09-52.mp4
+1. Получаем URL загрузки MAX...
+HTTP: 200
+Токен видео получен
+2. Загружаем файл...
+HTTP: 200
+<retval>1</retval>
+Видео ID: 1
+3. Публикуем пост в MAX...
+HTTP: 200
+{"message":{"recipient":{"chat_type":"channel","chat_id":-79584362916513},"timestamp":1791382016077,"body":{"mid":"mid.ffffb79e5251955f01a116b0504d569f","seq":117400011805644447,"text":"Синие, жёлтые, красные \nБазовые машины могут быть разные..\nНо головка, обязательно #LogMax✊","attachments":[{"payload":{"url":"https://maxvd568.okcdn.ru/?expires=1791468416134&srcIp=10.201.105.17&pr=112&srcAg=UNKNOWN&ms=130.49.231.80&type=4&sig=rIfrY27VZus&ct=27&urls=130.49.226.47&clientType=51&id=18647615670860&scl=1","token":"f9LHodD0cOLCv32QbOOzvrdGZ6OcZFTF8Tiu9QjwPcDVJA_9YWTfi10AAtem-WLXiFEwvrspVVemqXwN8D2-sBQ","id":16750449356876},"thumbnail":{"url":"https://pimg.mycdn.me/getImage?disableStub=true&type=PREPARE&url=https%3A%2F%2Fiv.okcdn.ru%2FvideoPreview%3Fid%3D18647615670860%26type%3D39%26idx%3D0%26ct%3D-30%26od%3D1%26tkn%3DH8BlUai3feQuLNwJ3H4HIXHXHBo&signatureToken=MnEvAiDhFr7OIgDuvWRPCg"},"duration":23,"type":"video"}]},"stat":{"views":1},"url":"https://max.ru/id7813622650_biz/AaEWsFBNVp8"}}
+Пост опубликован
+Состояние сохранено: 10
+

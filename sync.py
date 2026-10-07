@@ -1,127 +1,311 @@
 import os
 import json
 import asyncio
-from dotenv import load_dotenv
-from telethon import TelegramClient
-from max_api import upload_video, send_video
 import logging
-from datetime import datetime
+
+from telethon import TelegramClient
+
+from config import *
+from max_sender import send_post
+
 
 logging.basicConfig(
-    filename="logs/sync.log",
+    filename=LOG_FILE,
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
     encoding="utf-8"
 )
 
-logger = logging.getLogger(__name__)
-
-load_dotenv()
-
-API_ID = int(os.getenv("TELEGRAM_API_ID"))
-API_HASH = os.getenv("TELEGRAM_API_HASH")
-CHANNEL = os.getenv("TELEGRAM_CHANNEL")
-
-STATE_FILE = "sync_state.json"
-DOWNLOAD_DIR = "downloads"
 
 client = TelegramClient(
     "logmax_session",
-    API_ID,
-    API_HASH
+    TELEGRAM_API_ID,
+    TELEGRAM_API_HASH
 )
 
 
+DOWNLOAD_STATE_FILE = "downloads_state.json"
+
+
+# ---------------- STATE MAX ----------------
+
 def load_state():
+
     if not os.path.exists(STATE_FILE):
-        return {"last_post_id": 0}
+        return 0
 
-    with open(STATE_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+    with open(
+        STATE_FILE,
+        "r",
+        encoding="utf-8"
+    ) as f:
+
+        return json.load(f)["last_post_id"]
 
 
-def save_state(last_post_id):
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
+
+def save_state(post_id):
+
+    with open(
+        STATE_FILE,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
         json.dump(
-            {"last_post_id": last_post_id},
+            {
+                "last_post_id": post_id
+            },
             f,
-            ensure_ascii=False,
             indent=4
         )
 
 
-async def find_next_post(last_post_id):
+
+# ---------------- STATE DOWNLOADS ----------------
+
+def load_download_state():
+
+    if not os.path.exists(DOWNLOAD_STATE_FILE):
+        return {}
+
+
+    with open(
+        DOWNLOAD_STATE_FILE,
+        "r",
+        encoding="utf-8"
+    ) as f:
+
+        return json.load(f)
+
+
+
+def save_download_state(post_id, file_path):
+
+    state = load_download_state()
+
+    state[str(post_id)] = file_path
+
+
+    with open(
+        DOWNLOAD_STATE_FILE,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            state,
+            f,
+            indent=4,
+            ensure_ascii=False
+        )
+
+
+
+# ---------------- TELEGRAM ----------------
+
+async def find_next_post(last_id):
+
     async for message in client.iter_messages(
-        CHANNEL,
+        TELEGRAM_CHANNEL,
         reverse=True
     ):
-        # Берём только сообщения после последнего обработанного
-        if message.id <= last_post_id:
+
+        if message.id <= last_id:
             continue
 
-        # Пропускаем пустые служебные сообщения
+
         if not message.text and not message.media:
             continue
 
+
         return message
+
 
     return None
 
 
-async def main():
-    print("Подключаемся к Telegram...")
-    await client.start()
 
-    state = load_state()
-    last_post_id = state["last_post_id"]
+async def download_media(message):
 
-    print(f"Последний обработанный пост: {last_post_id}")
-
-    message = await find_next_post(last_post_id)
-
-    if not message:
-        print("Новых постов для переноса нет.")
-        return
-
-    print("\n--- СЛЕДУЮЩИЙ ПОСТ ---")
-    print(f"ID: {message.id}")
-    print(f"Дата: {message.date}")
-    print(f"Текст:\n{message.text or '[без текста]'}")
-
-    if message.media:
-        print("\nМедиа найдено.")
-        print(f"Тип: {type(message.media).__name__}")
-
-        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-
-        file_path = await message.download_media(
-            file=DOWNLOAD_DIR
-        )
-
-        print(f"Медиа сохранено: {file_path}")
-    else:
-        print("\nМедиа нет.")
-
-    # Отправляем в MAX только после скачивания
-
-    if message.media:
-        video_token = upload_video(file_path)
-
-        send_video(
-            message.text or "",
-            video_token
-        )
-
-    else:
-        print("Текстовый пост без медиа пока не отправляем")
-
-    # Только после успешной публикации MAX
-    save_state(message.id)
-
-    print(
-        f"\nСостояние сохранено: последний пост = {message.id}"
+    os.makedirs(
+        DOWNLOAD_DIR,
+        exist_ok=True
     )
 
 
+    # ищем уже скачанный файл этого поста
+
+    prefix = f"telegram_{message.id}_"
+
+
+    for filename in os.listdir(DOWNLOAD_DIR):
+
+        if filename.startswith(prefix):
+
+            existing = os.path.join(
+                DOWNLOAD_DIR,
+                filename
+            )
+
+            print("Файл уже существует:")
+            print(existing)
+
+            return existing
+
+
+
+    print("Скачиваем медиа...")
+
+
+    temp_file = await message.download_media(
+        file=DOWNLOAD_DIR
+    )
+
+
+    if not temp_file:
+        return None
+
+
+    # новое имя с Telegram ID
+
+    ext = os.path.splitext(temp_file)[1]
+
+
+    new_file = os.path.join(
+        DOWNLOAD_DIR,
+        f"telegram_{message.id}_{os.path.basename(temp_file)}"
+    )
+
+
+    os.rename(
+        temp_file,
+        new_file
+    )
+
+
+    print("Файл сохранён:")
+    print(new_file)
+
+
+    return new_file
+
+
+
+# ---------------- MAIN ----------------
+
+async def main():
+
+    print(
+        "Подключаемся к Telegram..."
+    )
+
+
+    await client.start()
+
+
+    last_id = load_state()
+
+
+    print(
+        f"Последний обработанный пост: {last_id}"
+    )
+
+
+    message = await find_next_post(
+        last_id
+    )
+
+
+    if not message:
+
+        print(
+            "Новых постов нет"
+        )
+
+        return
+
+
+
+    print("====================")
+
+    print(
+        f"Telegram ID: {message.id}"
+    )
+
+
+    print(
+        message.text or "[без текста]"
+    )
+
+
+
+    file_path = None
+
+
+    if message.media:
+
+        file_path = await download_media(
+            message
+        )
+
+
+        print(
+            file_path
+        )
+
+
+
+    success = False
+
+
+
+    if file_path:
+
+        success = send_post(
+            message.text or "",
+            file_path
+        )
+
+
+    else:
+
+        print(
+            "Пост без медиа пока пропускаем"
+        )
+
+
+
+    if success:
+
+        save_state(
+            message.id
+        )
+
+
+        logging.info(
+            f"Telegram {message.id} -> MAX OK"
+        )
+
+
+        print(
+            f"Состояние сохранено: {message.id}"
+        )
+
+
+    else:
+
+        logging.error(
+            f"Telegram {message.id} -> MAX ERROR"
+        )
+
+
+        print(
+            "State НЕ изменён"
+        )
+
+
+
 if __name__ == "__main__":
+
     asyncio.run(main())

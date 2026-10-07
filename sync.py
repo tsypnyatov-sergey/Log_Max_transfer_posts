@@ -7,6 +7,9 @@ from telethon import TelegramClient
 
 from config import *
 from max_sender import send_post
+import time
+
+
 
 
 logging.basicConfig(
@@ -26,6 +29,58 @@ client = TelegramClient(
 
 DOWNLOAD_STATE_FILE = "downloads_state.json"
 
+
+LOCK_FILE = "sync.lock"
+
+LOCK_TIMEOUT = 2 * 60 * 60  # 2 часа
+
+
+def create_lock():
+
+    if os.path.exists(LOCK_FILE):
+
+        file_age = time.time() - os.path.getmtime(LOCK_FILE)
+
+
+        if file_age < LOCK_TIMEOUT:
+
+            print(
+                "Синхронизация уже запущена. Выход."
+            )
+
+            return False
+
+
+        else:
+
+            print(
+                "Старый lock найден. Удаляем."
+            )
+
+            os.remove(LOCK_FILE)
+
+
+
+    with open(
+        LOCK_FILE,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        f.write(
+            str(os.getpid())
+        )
+
+
+    return True
+
+
+
+def remove_lock():
+
+    if os.path.exists(LOCK_FILE):
+
+        os.remove(LOCK_FILE)
 
 # ---------------- STATE MAX ----------------
 
@@ -308,4 +363,17 @@ async def main():
 
 if __name__ == "__main__":
 
-    asyncio.run(main())
+
+    if not create_lock():
+
+        exit()
+
+
+    try:
+
+        asyncio.run(main())
+
+
+    finally:
+
+        remove_lock()

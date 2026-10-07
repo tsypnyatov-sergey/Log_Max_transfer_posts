@@ -5,3 +5,4 @@ __pycache__/
 downloads/
 .venv/
 .idea/
+vk_oauth_state.json

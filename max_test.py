@@ -1,8 +1,11 @@
 import os
 import requests
 from dotenv import load_dotenv
+import truststore
 
 load_dotenv()
+
+truststore.inject_into_ssl()
 
 MAX_BOT_TOKEN = os.getenv("MAX_BOT_TOKEN")
 MAX_CHANNEL_ID = os.getenv("MAX_CHANNEL_ID")
@@ -19,10 +22,10 @@ def main():
         print("Ошибка: MAX_CHANNEL_ID не найден в .env")
         return
 
-    print("Проверяем подключение к MAX...")
+    print("Проверяем MAX...")
 
     response = requests.get(
-        f"{BASE_URL}/me",
+        f"{BASE_URL}/chats/{MAX_CHANNEL_ID}",
         headers={
             "Authorization": MAX_BOT_TOKEN
         }
@@ -34,3 +37,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

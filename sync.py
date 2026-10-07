@@ -3,6 +3,18 @@ import json
 import asyncio
 from dotenv import load_dotenv
 from telethon import TelegramClient
+from max_api import upload_video, send_video
+import logging
+from datetime import datetime
+
+logging.basicConfig(
+    filename="logs/sync.log",
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    encoding="utf-8"
+)
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -90,10 +102,25 @@ async def main():
     else:
         print("\nМедиа нет.")
 
-    # Пока считаем пост обработанным только после успешного скачивания
+    # Отправляем в MAX только после скачивания
+
+    if message.media:
+        video_token = upload_video(file_path)
+
+        send_video(
+            message.text or "",
+            video_token
+        )
+
+    else:
+        print("Текстовый пост без медиа пока не отправляем")
+
+    # Только после успешной публикации MAX
     save_state(message.id)
 
-    print(f"\nСостояние сохранено: последний пост = {message.id}")
+    print(
+        f"\nСостояние сохранено: последний пост = {message.id}"
+    )
 
 
 if __name__ == "__main__":
